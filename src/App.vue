@@ -1,0 +1,54 @@
+<template>
+  <div id="nav">
+    <router-link to="/">Home</router-link> -
+    <router-link to="/basket">Shopping Bag ({{ productsInBag.length }})</router-link>
+  </div>
+  <router-view />
+</template>
+
+<script setup>
+import { useProductsStore } from './store'
+import { onMounted, computed } from 'vue'
+
+const productsStore = useProductsStore()
+
+const productsInBag = computed(() => productsStore.productsInBag)
+
+onMounted(async () => {
+  await productsStore.loadProducts()
+  productsStore.loadBag()
+})
+</script>
+
+<style lang="scss">
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+  max-width: 1280px;
+  margin: 80px auto;
+}
+
+#nav {
+  padding: 16px 0;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  background-color: rgb(37, 37, 37);
+  color: white;
+
+  a {
+    color: white;
+    text-decoration: none;
+
+    &.router-link-exact-active {
+      color: #007bff;
+    }
+  }
+}
+</style>
