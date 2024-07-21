@@ -27,20 +27,17 @@ export const useProductsStore = defineStore('products', () => {
 
   const createProduct = async (product) => {
     try {
-      const response = await apiClient.post('/products', product)
-      products.value.push(response.data)
+      await apiClient.post('/products', product)
+      await loadProducts()
     } catch (error) {
       console.error('Error creating product:', error)
     }
   }
 
-  const updateProduct = async (id, product) => {
+  const updateProduct = async (product) => {
     try {
-      await apiClient.put(`/products/${id}`, product)
-      const index = products.value.findIndex((p) => p.id === id)
-      if (index !== -1) {
-        products.value[index] = { ...products.value[index], ...product }
-      }
+      await apiClient.put(`/products/${product.id}`, product)
+      await loadProducts()
     } catch (error) {
       console.error('Error updating product:', error)
     }
@@ -49,7 +46,7 @@ export const useProductsStore = defineStore('products', () => {
   const deleteProduct = async (id) => {
     try {
       await apiClient.delete(`/products/${id}`)
-      products.value = products.value.filter((p) => p.id !== id)
+      await loadProducts()
     } catch (error) {
       console.error('Error deleting product:', error)
     }
